@@ -32,3 +32,4 @@ key:[b9e5ca85-65aa-4592-adba-45eade4090b0], properties:[], content:{"apigw-reque
 * https://github.com/tspannhw/FLiP-Pi-BreakoutGarden
 * https://community.cloudera.com/t5/Community-Articles/Tracking-Air-Quality-with-HDP-and-HDF-Part-1-Apache-NiFi/ta-p/248265
 * https://community.cloudera.com/t5/Community-Articles/IoT-Series-Sensors-Utilizing-Breakout-Garden-Hat-Part-1/ta-p/249262
+* https://github.com/tspannhw/airquality
