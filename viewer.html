@@ -27,7 +27,7 @@ function loadDoc() {
   };
 }
 </script>
-        <br><br><b>PM 2.5</b>
+	<br><br><b>PM 2.5</b>
     <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -138,7 +138,7 @@ function IsJsonString(str) {
 $(document).ready(function() {
     var t = $('#example').DataTable();
 
-var wsUri = "ws://pulsar1:8080/ws/v2/consumer/persistent/public/default/aq-pm25/aqrpm25-reader?subscriptionType=Shared&receiverQueueSize=5000";
+var wsUri = "ws://127.0.0.1:8080/ws/v2/consumer/persistent/public/default/aq-pm25/aqrpm25-reader?subscriptionType=Shared&receiverQueueSize=5000";
 
 websocket = new WebSocket(wsUri);
 websocket.onopen = function(evt) {
@@ -162,10 +162,10 @@ websocket.onmessage = function(evt) {
              publishTime = dataPoints.publishTime;
      }
 
-        var dateObserved = " ";
-        if (!isEmpty(pulsarMessage.dateObserved)) {
-                dateObserved = pulsarMessage.dateObserved;
-        }
+	var dateObserved = " ";
+	if (!isEmpty(pulsarMessage.dateObserved)) {
+ 		dateObserved = pulsarMessage.dateObserved;
+	}
 
     var hourObserved = " ";
 
@@ -173,19 +173,19 @@ websocket.onmessage = function(evt) {
             hourObserved = pulsarMessage.hourObserved;
     }
 
-        var localTimeZone = " ";
-        if (!isEmpty(pulsarMessage.localTimeZone) ){
-                localTimeZone = pulsarMessage.localTimeZone;
-        }
-        var reportingArea = " ";
-        if ( !isEmpty(pulsarMessage.reportingArea) ) {
-                reportingArea = pulsarMessage.reportingArea;
-        }
+	var localTimeZone = " ";
+	if (!isEmpty(pulsarMessage.localTimeZone) ){
+		localTimeZone = pulsarMessage.localTimeZone;
+	}
+	var reportingArea = " ";
+	if ( !isEmpty(pulsarMessage.reportingArea) ) {
+		reportingArea = pulsarMessage.reportingArea;
+	}
 
-        var stateCode = " " ;
-        if ( !isEmpty(pulsarMessage.stateCode) ) {
-                stateCode = pulsarMessage.stateCode;
-        }
+	var stateCode = " " ;
+	if ( !isEmpty(pulsarMessage.stateCode) ) {
+		stateCode = pulsarMessage.stateCode;
+	}
     var latitude = " " ;
     if ( !isEmpty(pulsarMessage.latitude) ) {
         latitude = pulsarMessage.latitude;
@@ -200,7 +200,7 @@ websocket.onmessage = function(evt) {
     }
 
 
-                t.row.add( [ publishTime, dateObserved,hourObserved,localTimeZone,reportingArea,stateCode,latitude,longitude,aqi] ).draw(true );
+	        t.row.add( [ publishTime, dateObserved,hourObserved,localTimeZone,reportingArea,stateCode,latitude,longitude,aqi] ).draw(true );
        }
 };
 
@@ -210,7 +210,7 @@ websocket.onmessage = function(evt) {
 $(document).ready(function() {
     var t1 = $('#pm10').DataTable();
 
-var wsUri1 = "ws://pulsar1:8080/ws/v2/consumer/persistent/public/default/aq-pm10/aqpm10-reader2?subscriptionType=Shared&receiverQueueSize=5000";
+var wsUri1 = "ws://127.0.0.1:8080/ws/v2/consumer/persistent/public/default/aq-pm10/aqpm10-reader-10?subscriptionType=Shared&receiverQueueSize=5000";
 
 websocket1 = new WebSocket(wsUri1);
 websocket1.onopen = function(evt) {
@@ -236,7 +236,7 @@ websocket1.onmessage = function(evt) {
 
     var dateObserved = " ";
     if (!isEmpty(pulsarMessage.dateObserved)) {
-        dateObserved = pulsarMessage.dateObserved;  
+        dateObserved = pulsarMessage.dateObserved;
     }
 
     var hourObserved = " ";
@@ -282,7 +282,7 @@ websocket1.onmessage = function(evt) {
 $(document).ready(function() {
     var t2 = $('#ozone').DataTable();
 
-var wsUri2 = "ws://pulsar1:8080/ws/v2/consumer/persistent/public/default/aq-ozone/aqozone-reader?subscriptionType=Shared&receiverQueueSize=5000";
+var wsUri2 = "ws://127.0.0.1:8080/ws/v2/consumer/persistent/public/default/aq-ozone/aqozone-reader?subscriptionType=Shared&receiverQueueSize=5000";
 
 websocket2 = new WebSocket(wsUri2);
 websocket2.onopen = function(evt) {
@@ -308,7 +308,7 @@ websocket2.onmessage = function(evt) {
 
     var dateObserved = " ";
     if (!isEmpty(pulsarMessage.dateObserved)) {
-        dateObserved = pulsarMessage.dateObserved;  
+        dateObserved = pulsarMessage.dateObserved;
     }
 
     var hourObserved = " ";
