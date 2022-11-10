@@ -1,0 +1,364 @@
+<html>
+<head>
+<title>Apache Pulsar - Websockets - Data Tables - Air Quality</title>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+<body bgcolor="white" text="black">
+<img data-v-c612f5f2="" alt="StreamNative Logo" src="https://streamnative.io/assets/static/sn-logo-vertical-dark.c516648.a34f97839dee38e7499aa0c21d0b2255.png" width="543" data-src="https://streamnative.io/assets/static/sn-logo-vertical-dark.c516648.a34f97839dee38e7499aa0c21d0b2255.png" data-srcset="https://streamnative.io/assets/static/sn-logo-vertical-dark.c516648.a34f97839dee38e7499aa0c21d0b2255.png 543w" data-sizes="(max-width: 543px) 100vw, 543px" class="w-56 mt-4 md:mt-0 g-image g-image--lazy g-image--loaded" srcset="https://streamnative.io/assets/static/sn-logo-vertical-dark.c516648.a34f97839dee38e7499aa0c21d0b2255.png 543w" sizes="(max-width: 543px) 100vw, 543px">
+<script>
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+/// send the information to the server
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("demo").innerHTML = '';
+    }
+  };
+}
+</script>
+	<br><br><b>PM 2.5</b>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+
+                    <th><b>publishTime</b></th>
+                     <th><b>Date</b></th>
+                       <th><b>Hour</b></th>
+                       <th><b>TZ</b></th>
+                       <th><b>Area</b></th>
+                       <th><b>State</b></th>
+                       <th><b>Lat</b></th>
+                       <th><b>Long</b></th>
+                       <th><b>PM 2.5 AQI</b></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                                    <th><b>publishTime</b></th>
+                     <th><b>Date</b></th>
+                       <th><b>Hour</b></th>
+                       <th><b>TZ</b></th>
+                       <th><b>Area</b></th>
+                       <th><b>State</b></th>
+                       <th><b>Lat</b></th>
+                       <th><b>Long</b></th>
+                       <th><b>PM 2.5 AQI</b></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br>
+
+        <br><br><b>PM 10</b>
+    <table id="pm10" class="display" style="width:100%">
+        <thead>
+            <tr>
+
+                    <th><b>publishTime</b></th>
+                     <th><b>Date</b></th>
+                       <th><b>Hour</b></th>
+                       <th><b>TZ</b></th>
+                       <th><b>Area</b></th>
+                       <th><b>State</b></th>
+                       <th><b>Lat</b></th>
+                       <th><b>Long</b></th>
+                       <th><b>PM 10 AQI</b></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                                    <th><b>publishTime</b></th>
+                     <th><b>Date</b></th>
+                       <th><b>Hour</b></th>
+                       <th><b>TZ</b></th>
+                       <th><b>Area</b></th>
+                       <th><b>State</b></th>
+                       <th><b>Lat</b></th>
+                       <th><b>Long</b></th>
+                       <th><b>PM 10 AQI</b></th>
+            </tr>
+        </tfoot>
+    </table>
+
+      <br>
+
+        <br><br><b>Ozone</b>
+    <table id="ozone" class="display" style="width:100%">
+        <thead>
+            <tr>
+
+                    <th><b>publishTime</b></th>
+                     <th><b>Date</b></th>
+                       <th><b>Hour</b></th>
+                       <th><b>TZ</b></th>
+                       <th><b>Area</b></th>
+                       <th><b>State</b></th>
+                       <th><b>Lat</b></th>
+                       <th><b>Long</b></th>
+                       <th><b>O3 AQI</b></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                                    <th><b>publishTime</b></th>
+                     <th><b>Date</b></th>
+                       <th><b>Hour</b></th>
+                       <th><b>TZ</b></th>
+                       <th><b>Area</b></th>
+                       <th><b>State</b></th>
+                       <th><b>Lat</b></th>
+                       <th><b>Long</b></th>
+                       <th><b>o3 AQI</b></th>
+            </tr>
+        </tfoot>
+    </table>
+<script>
+function isEmpty(val){
+    return (val === undefined || val == null || val.length <= 0) ? true : false;
+}
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+$(document).ready(function() {
+    var t = $('#example').DataTable();
+
+var wsUri = "ws://localhost:8080/ws/v2/consumer/persistent/public/default/aq-pm25/aqrpm25-reader?subscriptionType=Shared&receiverQueueSize=5000";
+
+websocket = new WebSocket(wsUri);
+websocket.onopen = function(evt) {
+   console.log('open');
+};
+websocket.onerror = function(evt) {console.log('ERR', evt)};
+websocket.onmessage = function(evt) {
+
+    var dataPoints = JSON.parse(evt.data);
+    if ( dataPoints === undefined || dataPoints == null || dataPoints.payload === undefined || dataPoints.payload == null ) {
+            return;
+    }
+    if (IsJsonString(atob(dataPoints.payload))) {
+     var pulsarMessage = JSON.parse(atob(dataPoints.payload));
+     if ( pulsarMessage === undefined || pulsarMessage == null ) {
+             return;
+     }
+
+     var publishTime = " ";
+     if ( !isEmpty(dataPoints.publishTime) ) {
+             publishTime = dataPoints.publishTime;
+     }
+
+	var dateObserved = " ";
+	if (!isEmpty(pulsarMessage.dateObserved)) {
+ 		dateObserved = pulsarMessage.dateObserved;	
+	}
+
+    var hourObserved = " ";
+
+    if ( !isEmpty(pulsarMessage.hourObserved) ) {
+            hourObserved = pulsarMessage.hourObserved;
+    }
+
+	var localTimeZone = " ";
+	if (!isEmpty(pulsarMessage.localTimeZone) ){
+		localTimeZone = pulsarMessage.localTimeZone;
+	}
+	var reportingArea = " ";
+	if ( !isEmpty(pulsarMessage.reportingArea) ) {
+		reportingArea = pulsarMessage.reportingArea;
+	}
+
+	var stateCode = " " ;
+	if ( !isEmpty(pulsarMessage.stateCode) ) {
+		stateCode = pulsarMessage.stateCode;
+	}
+    var latitude = " " ;
+    if ( !isEmpty(pulsarMessage.latitude) ) {
+        latitude = pulsarMessage.latitude;
+    }
+        var longitude = " " ;
+    if ( !isEmpty(pulsarMessage.longitude) ) {
+        longitude = pulsarMessage.longitude;
+    }
+        var aqi = " " ;
+    if ( !isEmpty(pulsarMessage.aqi) ) {
+        aqi = pulsarMessage.aqi;
+    }
+
+
+	        t.row.add( [ publishTime, dateObserved,hourObserved,localTimeZone,reportingArea,stateCode,latitude,longitude,aqi] ).draw(true );
+       }
+};
+
+} );
+
+
+$(document).ready(function() {
+    var t1 = $('#pm10').DataTable();
+
+var wsUri1 = "ws://localhost:8080/ws/v2/consumer/persistent/public/default/aq-pm10/aqpm10-reader-3?subscriptionType=Shared&receiverQueueSize=5000";
+
+websocket1 = new WebSocket(wsUri1);
+websocket1.onopen = function(evt) {
+   console.log('open');
+};
+websocket1.onerror = function(evt) {console.log('ERR', evt)};
+websocket1.onmessage = function(evt) {
+    console.log("got pm10 data");
+    var dataPoints = JSON.parse(evt.data);
+    console.log(dataPoints);
+    if ( dataPoints === undefined || dataPoints == null || dataPoints.payload === undefined || dataPoints.payload == null ) {
+            console.log("no datapoints");
+            return;
+    }
+    if (IsJsonString(atob(dataPoints.payload))) {
+     var pulsarMessage = JSON.parse(atob(dataPoints.payload));
+	console.log("msg pm10:" + pulsarMessage);
+     if ( pulsarMessage === undefined || pulsarMessage == null ) {
+	     console.log("pm10 is bad");
+             return;
+     }
+
+     var publishTime = " ";
+     if ( !isEmpty(dataPoints.publishTime) ) {
+             publishTime = dataPoints.publishTime;
+     }
+
+    var dateObserved = " ";
+    if (!isEmpty(pulsarMessage.dateObserved)) {
+        dateObserved = pulsarMessage.dateObserved;  
+    }
+
+    var hourObserved = " ";
+
+    if ( !isEmpty(pulsarMessage.hourObserved) ) {
+            hourObserved = pulsarMessage.hourObserved;
+    }
+
+    var localTimeZone = " ";
+    if (!isEmpty(pulsarMessage.localTimeZone) ){
+        localTimeZone = pulsarMessage.localTimeZone;
+    }
+    var reportingArea = " ";
+    if ( !isEmpty(pulsarMessage.reportingArea) ) {
+        reportingArea = pulsarMessage.reportingArea;
+    }
+
+    var stateCode = " " ;
+    if ( !isEmpty(pulsarMessage.stateCode) ) {
+        stateCode = pulsarMessage.stateCode;
+    }
+    var latitude = " " ;
+    if ( !isEmpty(pulsarMessage.latitude) ) {
+        latitude = pulsarMessage.latitude;
+    }
+        var longitude = " " ;
+    if ( !isEmpty(pulsarMessage.longitude) ) {
+        longitude = pulsarMessage.longitude;
+    }
+        var aqi = " " ;
+    if ( !isEmpty(pulsarMessage.aqi) ) {
+        aqi = pulsarMessage.aqi;
+    }
+
+console.log("pm10 add row" + stateCode);
+
+            t1.row.add( [ publishTime, dateObserved,hourObserved,localTimeZone,reportingArea,stateCode,latitude,longitude,aqi] ).draw(true );
+       }
+};
+
+} );
+
+
+$(document).ready(function() {
+    var t2 = $('#ozone').DataTable();
+
+var wsUri2 = "ws://localhost:8080/ws/v2/consumer/persistent/public/default/aq-ozone/aqozone-reader?subscriptionType=Shared&receiverQueueSize=5000";
+
+websocket2 = new WebSocket(wsUri2);
+websocket2.onopen = function(evt) {
+   console.log('open');
+};
+websocket2.onerror = function(evt) {console.log('ERR', evt)};
+websocket2.onmessage = function(evt) {
+
+    var dataPoints = JSON.parse(evt.data);
+    if ( dataPoints === undefined || dataPoints == null || dataPoints.payload === undefined || dataPoints.payload == null ) {
+            return;
+    }
+    if (IsJsonString(atob(dataPoints.payload))) {
+     var pulsarMessage = JSON.parse(atob(dataPoints.payload));
+     if ( pulsarMessage === undefined || pulsarMessage == null ) {
+             return;
+     }
+
+     var publishTime = " ";
+     if ( !isEmpty(dataPoints.publishTime) ) {
+             publishTime = dataPoints.publishTime;
+     }
+
+    var dateObserved = " ";
+    if (!isEmpty(pulsarMessage.dateObserved)) {
+        dateObserved = pulsarMessage.dateObserved;  
+    }
+
+    var hourObserved = " ";
+
+    if ( !isEmpty(pulsarMessage.hourObserved) ) {
+            hourObserved = pulsarMessage.hourObserved;
+    }
+
+    var localTimeZone = " ";
+    if (!isEmpty(pulsarMessage.localTimeZone) ){
+        localTimeZone = pulsarMessage.localTimeZone;
+    }
+    var reportingArea = " ";
+    if ( !isEmpty(pulsarMessage.reportingArea) ) {
+        reportingArea = pulsarMessage.reportingArea;
+    }
+
+    var stateCode = " " ;
+    if ( !isEmpty(pulsarMessage.stateCode) ) {
+        stateCode = pulsarMessage.stateCode;
+    }
+    var latitude = " " ;
+    if ( !isEmpty(pulsarMessage.latitude) ) {
+        latitude = pulsarMessage.latitude;
+    }
+        var longitude = " " ;
+    if ( !isEmpty(pulsarMessage.longitude) ) {
+        longitude = pulsarMessage.longitude;
+    }
+        var aqi = " " ;
+    if ( !isEmpty(pulsarMessage.aqi) ) {
+        aqi = pulsarMessage.aqi;
+    }
+
+
+            t2.row.add( [ publishTime, dateObserved,hourObserved,localTimeZone,reportingArea,stateCode,latitude,longitude,aqi] ).draw(true );
+       }
+};
+
+} );
+
+</script>
+<p>
+<p><img src="stylecloud.png" border="0"></p>
+</p><br>
+&copy; 2021/2022 Tim Spann @PaasDev - datainmotion.dev - streamnative.io
+</body>
+</html>
